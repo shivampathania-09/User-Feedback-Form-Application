@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Form | Java Servlet Web Application</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <main class="app-container">
+        <div class="feedback-card">
+            <!-- Header Section -->
+            <header class="card-header">
+                <span class="badge-pill">MCA Lab • Viva Evaluation</span>
+                <h1 class="card-title">Student & User Feedback</h1>
+                <p class="card-subtitle">Please share your experience with us. All fields marked with * are required.</p>
+            </header>
+
+            <!-- HTTP Method Selector & Demonstration Bar -->
+            <section class="method-toolbar" aria-label="HTTP Method Toggle">
+                <div class="method-toggle-container">
+                    <span class="toolbar-label">Submission Mode:</span>
+                    <div class="toggle-group" role="radiogroup" aria-label="Select HTTP Method">
+                        <button type="button" class="method-btn active" id="btnMethodPost" data-method="POST">
+                            <span class="method-indicator"></span> POST (Secure Body)
+                        </button>
+                        <button type="button" class="method-btn" id="btnMethodGet" data-method="GET">
+                            <span class="method-indicator"></span> GET (URL Query)
+                        </button>
+                    </div>
+                </div>
+                <div class="method-badge-display">
+                    Active Action: <code id="activeActionLabel">FeedbackServlet [POST]</code>
+                </div>
+            </section>
+
+            <!-- Feedback Form -->
+            <form action="FeedbackServlet" method="POST" class="feedback-form" id="feedbackForm" novalidate>
+                
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="fullName" class="form-label">
+                        Full Name <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="fullName" 
+                            name="fullName" 
+                            class="form-control" 
+                            placeholder="e.g. Naveen Kumar" 
+                            required 
+                            minlength="2" 
+                            maxlength="60"
+                            autocomplete="name"
+                        >
+                        <span class="input-hint">Min 2, Max 60 characters</span>
+                    </div>
+                </div>
+
+                <!-- Email Address -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        Email Address <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-control" 
+                            placeholder="e.g. student@college.edu" 
+                            required 
+                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                            maxlength="80"
+                            autocomplete="email"
+                        >
+                        <span class="input-hint">Must be a valid email format</span>
+                    </div>
+                </div>
+
+                <!-- Category Dropdown -->
+                <div class="form-group">
+                    <label for="category" class="form-label">
+                        Feedback Category <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="category" name="category" class="form-control select-control" required>
+                            <option value="" disabled selected>-- Choose Category --</option>
+                            <option value="Academics">Academics &amp; Curriculum</option>
+                            <option value="Infrastructure">Infrastructure &amp; Lab Facilities</option>
+                            <option value="Campus Life">Campus Life &amp; Activities</option>
+                            <option value="General">General Inquiries &amp; Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Star Rating -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Experience Rating (1 to 5 Stars) <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="rating-container">
+                        <div class="star-rating-group" role="radiogroup" aria-label="Rating out of 5 stars">
+                            <input type="radio" id="star5" name="rating" value="5" required>
+                            <label for="star5" title="5 Stars - Excellent">★</label>
+                            
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4" title="4 Stars - Very Good">★</label>
+                            
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3" title="3 Stars - Good">★</label>
+                            
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2" title="2 Stars - Fair">★</label>
+                            
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1" title="1 Star - Poor">★</label>
+                        </div>
+                        <span class="rating-text" id="ratingText">Select your score</span>
+                    </div>
+                </div>
+
+                <!-- Recommendation Radio -->
+                <div class="form-group">
+                    <label class="form-label">Would you recommend this course / campus?</label>
+                    <div class="radio-options-row">
+                        <label class="radio-pill">
+                            <input type="radio" name="recommend" value="yes" checked>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label-text">Yes, definitely 👍</span>
+                        </label>
+                        <label class="radio-pill">
+                            <input type="radio" name="recommend" value="no">
+                            <span class="radio-custom"></span>
+                            <span class="radio-label-text">Not right now 👎</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Detailed Comments Textarea -->
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="comments" class="form-label">
+                            Detailed Comments &amp; Feedback <span class="required" aria-hidden="true">*</span>
+                        </label>
+                        <span class="char-counter" id="charCounter">0 / 500</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="comments" 
+                            name="comments" 
+                            class="form-control textarea-control" 
+                            rows="4" 
+                            placeholder="Provide your specific observations, faculty support reviews, or infrastructure feedback..." 
+                            required 
+                            minlength="10" 
+                            maxlength="500"
+                        ></textarea>
+                        <span class="input-hint">Min 10, Max 500 characters</span>
+                    </div>
+                </div>
+
+                <!-- Dual-Submit Action Section -->
+                <div class="actions-container">
+                    <button type="submit" class="submit-btn primary-btn" id="btnSubmitMain">
+                        <span class="btn-icon">🚀</span>
+                        <span id="btnSubmitText">Submit via POST</span>
+                    </button>
+                    
+                    <button type="submit" class="submit-btn secondary-btn" id="btnSubmitGetAlt" formmethod="GET" formaction="FeedbackServlet">
+                        <span class="btn-icon">🔍</span>
+                        <span>Submit via GET (Viva Demo)</span>
+                    </button>
+                </div>
+
+                <div class="viva-note">
+                    <span class="viva-note-icon">💡</span>
+                    <span><strong>Viva Note:</strong> POST transmits form payload inside the HTTP request body. GET appends parameters to the URL query string (<code>?fullName=...&amp;category=...</code>).</span>
+                </div>
+
+                <div class="text-center" style="margin-top: 1rem;">
+                    <a href="FeedbackServlet" class="mini-link">📊 View All Feedback Submissions (Dashboard) &rarr;</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Client-Side Form Validation & Mode Switching Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('feedbackForm');
+            const btnMethodPost = document.getElementById('btnMethodPost');
+            const btnMethodGet = document.getElementById('btnMethodGet');
+            const activeActionLabel = document.getElementById('activeActionLabel');
+            const btnSubmitText = document.getElementById('btnSubmitText');
+            const commentsArea = document.getElementById('comments');
+            const charCounter = document.getElementById('charCounter');
+            const ratingInputs = document.querySelectorAll('input[name="rating"]');
+            const ratingText = document.getElementById('ratingText');
+
+            const ratingLabels = {
+                '5': '5 Stars — Excellent Experience! 🌟',
+                '4': '4 Stars — Very Good 👍',
+                '3': '3 Stars — Average / Satisfactory ⚡',
+                '2': '2 Stars — Needs Improvement ⚠️',
+                '1': '1 Star — Poor Experience ❗'
+            };
+
+            // Switch Method Logic
+            function setFormMethod(method) {
+                form.setAttribute('method', method);
+                if (method === 'POST') {
+                    btnMethodPost.classList.add('active');
+                    btnMethodGet.classList.remove('active');
+                    activeActionLabel.textContent = 'FeedbackServlet [POST]';
+                    btnSubmitText.textContent = 'Submit via POST';
+                } else {
+                    btnMethodGet.classList.add('active');
+                    btnMethodPost.classList.remove('active');
+                    activeActionLabel.textContent = 'FeedbackServlet [GET]';
+                    btnSubmitText.textContent = 'Submit via GET';
+                }
+            }
+
+            btnMethodPost.addEventListener('click', () => setFormMethod('POST'));
+            btnMethodGet.addEventListener('click', () => setFormMethod('GET'));
+
+            // Live Character Counter
+            commentsArea.addEventListener('input', function () {
+                const currentLength = this.value.length;
+                charCounter.textContent = `${currentLength} / 500`;
+                if (currentLength >= 480) {
+                    charCounter.style.color = '#ef4444';
+                } else {
+                    charCounter.style.color = 'var(--text-muted)';
+                }
+            });
+
+            // Star Rating Text Display
+            ratingInputs.forEach(input => {
+                input.addEventListener('change', function () {
+                    if (this.checked && ratingLabels[this.value]) {
+                        ratingText.textContent = ratingLabels[this.value];
+                        ratingText.style.color = '#f59e0b';
+                    }
+                });
+            });
+
+            // Custom HTML5 Validation Enhancer
+            form.addEventListener('submit', function (e) {
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    form.reportValidity();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
